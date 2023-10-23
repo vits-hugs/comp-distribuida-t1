@@ -1,6 +1,6 @@
 package ufsc.br.distribuida.t1;
 import jakarta.persistence.*; // for Spring Boot 3
-
+// import javax.persistence.*; // for Spring Boot 2
 @Entity
 @Table(name = "muntjac")
 public class Muntjac {
@@ -16,6 +16,9 @@ public class Muntjac {
 
     @Column(name = "felicidade")
     private double felicidade;
+
+    public Muntjac() {
+    }
 
     public long getId(){
         return id;
@@ -37,5 +40,11 @@ public class Muntjac {
     }
     public void setFelicidade(double felicidade){
         this.felicidade = felicidade;
+    }
+
+    public Muntjac(String nome, String chapeu, double felicidade){
+        this.nome = nome;
+        this.felicidade = felicidade;
+        this.chapeu = chapeu;
     }
 }

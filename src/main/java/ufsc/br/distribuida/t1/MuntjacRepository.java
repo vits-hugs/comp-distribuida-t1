@@ -6,5 +6,5 @@ import java.util.List;
 
 
 public interface MuntjacRepository extends JpaRepository<Muntjac, Long>{
-    List<Muntjac> findByName(String nome);
+    List<Muntjac> findByNome(String nome);
 }
