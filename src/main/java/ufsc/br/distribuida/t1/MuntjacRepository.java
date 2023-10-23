@@ -1,4 +1,10 @@
 package ufsc.br.distribuida.t1;
 
-public class MuntjacRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+
+public interface MuntjacRepository extends JpaRepository<Muntjac, Long>{
+    List<Muntjac> findByName(String nome);
 }
