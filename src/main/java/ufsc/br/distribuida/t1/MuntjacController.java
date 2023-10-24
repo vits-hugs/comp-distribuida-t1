@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,7 +44,7 @@ public class MuntjacController {
     public ResponseEntity<Muntjac> createMuntjac(@RequestBody Muntjac muntjac) {
         try {
             Muntjac _muntjac = muntjacRepository
-                    .save(new Muntjac("juan", "chapeu de palha", 40.0));
+                    .save(new Muntjac(muntjac.getNome(), muntjac.getChapeu(), muntjac.getFelicidade()));
             return new ResponseEntity<>(_muntjac, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
