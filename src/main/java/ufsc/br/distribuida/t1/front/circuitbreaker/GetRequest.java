@@ -32,8 +32,7 @@ public class GetRequest implements Requester {
 
         in.close();
         con.disconnect();
-        String ncontent = content.substring(1,content.length() -1);
-        JSONObject json = new JSONObject(ncontent);
+        JSONObject json = new JSONObject(content.toString());
 
         return json;
     }

@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static ufsc.br.distribuida.t1.front.requestFunctions.makeRequestGetIDMunt;
+
 
 public class Front{
     final static String URL = "http://localhost:8080/api/muntjacs";
@@ -42,7 +44,7 @@ public class Front{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JSONObject object;
-                Requester request = new GetRequest(URL);
+                Requester request = makeRequestGetIDMunt(URL,1);
                 object = getCircuitBreaker.ExecuteAction(request);
 
                 textArea.setText(object.toString());

@@ -15,10 +15,10 @@ import java.net.URL;
 
 public class requestFunctions {
     final static String URL = "http://localhost:8080/api/muntjacs";
-    static GetRequest makeRequestGetMunt(String url) throws IOException {
+    public static GetRequest makeRequestGetIDMunt(String url,int ID) {
+        url = url + '/' + ID;
         GetRequest getRequest = new GetRequest(url);
         return getRequest;
-
     }
 
 
