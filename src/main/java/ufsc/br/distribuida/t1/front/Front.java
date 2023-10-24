@@ -1,6 +1,12 @@
 
 package ufsc.br.distribuida.t1.front;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.json.JSONObject;
+import ufsc.br.distribuida.t1.front.circuitbreaker.CircuitBreaker;
+import ufsc.br.distribuida.t1.front.circuitbreaker.GetRequest;
+import ufsc.br.distribuida.t1.front.circuitbreaker.Requester;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static ufsc.br.distribuida.t1.front.requestFunctions.getMunt;
 
 public class Front{
+    final static String URL = "http://localhost:8080/api/muntjacs";
     public static void main(String args[]) throws IOException {
 
         //Creating the Frame
@@ -29,17 +35,17 @@ public class Front{
         JButton reset = new JButton("Send");
         JButton r1 = new JButton("Send");
         JButton r2 = new JButton("Send");
+
+        CircuitBreaker getCircuitBreaker = new CircuitBreaker();
         send.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("CRICA");
-                try {
-                    getMunt();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                textArea.setText("Bosta");
+                JSONObject object;
+                Requester request = new GetRequest(URL);
+                object = getCircuitBreaker.ExecuteAction(request);
+
+                textArea.setText(object.toString());
             }
         });
         panel.add(send);

@@ -1,5 +1,9 @@
 package ufsc.br.distribuida.t1.front.circuitbreaker;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 public class CircuitBreaker
 {
     private ICircuitBreakerStateStore stateStore;
@@ -9,29 +13,35 @@ public class CircuitBreaker
 
     public boolean IsOpen() {  return !IsClosed(); }
 
-    public void ExecuteAction(Function action)
+    public JSONObject ExecuteAction(Requester action)
     {
-        if (IsOpen())
-        {
-            // The circuit breaker is Open.
-
+        try {
+            JSONObject obj = action.DO();
+            return obj;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        // The circuit breaker is Closed, execute the action.
-        try
-        {
-//            action();
-        }
-        catch (Exception ex)
-        {
-            // If an exception still occurs here, simply
-            // retrip the breaker immediately.
-            this.TrackException(ex);
-
-            // Throw the exception so that the caller can tell
-            // the type of exception that was thrown.
-//            throw;
-        }
+//        if (IsOpen())
+//        {
+//            // The circuit breaker is Open.
+//
+//        }
+//
+//        // The circuit breaker is Closed, execute the action.
+//        try
+//        {
+////            action();
+//        }
+//        catch (Exception ex)
+//        {
+//            // If an exception still occurs here, simply
+//            // retrip the breaker immediately.
+//            this.TrackException(ex);
+//
+//            // Throw the exception so that the caller can tell
+//            // the type of exception that was thrown.
+////            throw;
+//        }
     }
 
     private void TrackException(Exception ex)

@@ -1,5 +1,10 @@
 package ufsc.br.distribuida.t1.front;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.json.*;
+import ufsc.br.distribuida.t1.front.circuitbreaker.GetRequest;
+import ufsc.br.distribuida.t1.front.circuitbreaker.Requester;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,22 +14,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 public class requestFunctions {
-
-    static void getMunt() throws IOException {
-
-        URL url = new URL("http://localhost:8080/api/muntjacs");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        System.out.println(content);
-        in.close();
-        con.disconnect();
+    final static String URL = "http://localhost:8080/api/muntjacs";
+    static GetRequest makeRequestGetMunt(String url) throws IOException {
+        GetRequest getRequest = new GetRequest(url);
+        return getRequest;
 
     }
 
