@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,18 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class MuntjacController {
 
+    public static void main(String[] args) {
+        SpringApplication.run(T1Application.class, args);
+    }
+
     @Autowired
     MuntjacRepository muntjacRepository;
 
     @GetMapping("/muntjacs")
     public ResponseEntity<List<Muntjac>> getAllMuntjacs() {
+
         try {
             List<Muntjac> muntjacs = new ArrayList<Muntjac>();
 
             muntjacRepository.findAll().forEach(muntjacs::add);
 
             if (muntjacs.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(muntjacs,HttpStatus.OK);
             }
 
             return new ResponseEntity<>(muntjacs, HttpStatus.OK);
@@ -40,7 +46,7 @@ public class MuntjacController {
     }
 
     @PostMapping("/muntjacs")
-    public ResponseEntity<Muntjac> createMuntjac(@RequestBody Muntjac muntjac) {
+    public ResponseEntity<Muntjac> createMuntjac() {
         try {
             Muntjac _muntjac = muntjacRepository
                     .save(new Muntjac("juan", "chapeu de palha", 40.0));
