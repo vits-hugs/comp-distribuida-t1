@@ -1,11 +1,11 @@
 
 package ufsc.br.distribuida.t1.front;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONObject;
+import ufsc.br.distribuida.t1.Muntjac;
+import ufsc.br.distribuida.t1.front.requests.Request;
 import ufsc.br.distribuida.t1.front.circuitbreaker.CircuitBreaker;
-import ufsc.br.distribuida.t1.front.circuitbreaker.GetRequest;
-import ufsc.br.distribuida.t1.front.circuitbreaker.Requester;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,10 +13,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
-import static ufsc.br.distribuida.t1.front.requestFunctions.makeRequestGetIDMunt;
+import static ufsc.br.distribuida.t1.front.requestFunctions.*;
 
 
 public class Front{
@@ -33,28 +32,45 @@ public class Front{
 
         //Creating the panel at bottom and adding components
         JPanel panel = new JPanel(); // the panel is not visible in output
-        JButton send = new JButton("Send");
-        JButton reset = new JButton("Send");
-        JButton r1 = new JButton("Send");
-        JButton r2 = new JButton("Send");
+        JButton post = new JButton("post muntjac");
+        JButton getMuntjac = new JButton("get a muntjac");
+        JButton modMuntjac = new JButton("modify muntjac");
 
         CircuitBreaker getCircuitBreaker = new CircuitBreaker();
-        send.addActionListener(new ActionListener() {
-
+        getMuntjac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JSONObject object;
-                Requester request = makeRequestGetIDMunt(URL,1);
+
+                Request request = makeRequestGetIDMunt(URL,1);
                 object = getCircuitBreaker.ExecuteAction(request);
 
                 textArea.setText(object.toString());
             }
         });
-        panel.add(send);
-        panel.add(reset);
-        panel.add(r2);panel.add(r1);
-        // Text Area at the Center
+        post.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Muntjac muntjac = new Muntjac("pastel","asr",40);
+                Request request = makeRequestPostMunt(URL,muntjac);
+                JSONObject object = getCircuitBreaker.ExecuteAction(request);
+                textArea.setText(object.toString());
+            }
+        });
 
+        modMuntjac.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Muntjac muntjac = new Muntjac("novo","asr",45);
+                Request request = makeRequestModifyMunt(URL,153,muntjac);
+                JSONObject object = getCircuitBreaker.ExecuteAction(request);
+                textArea.setText(object.toString());
+            }
+        });
+
+        panel.add(post);
+        panel.add(getMuntjac);
+        panel.add(modMuntjac);
 
         BufferedImage myPicture = ImageIO.read(Front.class.getResource("/muntjac.jpeg"));
         Image newImage = myPicture.getScaledInstance(300, 300, Image.SCALE_DEFAULT);

@@ -1,6 +1,7 @@
 package ufsc.br.distribuida.t1.front.circuitbreaker;
 
 import org.json.JSONObject;
+import ufsc.br.distribuida.t1.front.requests.Request;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public class CircuitBreaker
 
     public boolean IsOpen() {  return !IsClosed(); }
 
-    public JSONObject ExecuteAction(Requester action)
+    public JSONObject ExecuteAction(Request action)
     {
         try {
             JSONObject obj = action.DO();

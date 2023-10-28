@@ -1,4 +1,4 @@
-package ufsc.br.distribuida.t1.front.circuitbreaker;
+package ufsc.br.distribuida.t1.front.requests;
 
 import org.json.JSONObject;
 
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-public class GetRequest implements Requester {
+public class GetRequest implements Request {
 
     final static String URL = "http://localhost:8080/api/muntjacs";
 
