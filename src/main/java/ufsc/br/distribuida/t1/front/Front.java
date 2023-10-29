@@ -33,7 +33,7 @@ public class Front{
         panel.add(hatField);
         panel.add(new JLabel("Felicidade:"));
         panel.add(happyField);
-        int result = JOptionPane.showConfirmDialog(parent, panel, "Insira ID do muntjac", JOptionPane.OK_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Insira dados do muntjac", JOptionPane.OK_CANCEL_OPTION);
 
         String name = null;
         String hat = null;
@@ -71,7 +71,7 @@ public class Front{
         //Creating the Frame
         JFrame frame = new JFrame("Muntjac");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        frame.setSize(600, 600);
 
         JTextField textArea = new JTextField("Read Only JTextField");
         textArea.setEditable(false);
@@ -117,11 +117,20 @@ public class Front{
         modMuntjac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int id = choiceID(modMuntjac);
-                Muntjac muntjac = showMuntjacDialog(modMuntjac);
-                Request request = makeRequestModifyMunt(URL,id,muntjac);
-                JSONObject object = getCircuitBreaker.ExecuteAction(request);
-                textArea.setText(object.toString());
+                int id;
+                try {
+                    id = choiceID(getMuntjac);
+                } catch (NumberFormatException exception) {
+                    textArea.setText("Insira um numero");
+                    getMuntjac.doClick();
+                    return;
+                }
+                if(id!=-1) {
+                    Muntjac muntjac = showMuntjacDialog(modMuntjac);
+                    Request request = makeRequestModifyMunt(URL, id, muntjac);
+                    JSONObject object = getCircuitBreaker.ExecuteAction(request);
+                    textArea.setText(object.toString());
+                }
             }
         });
 
@@ -130,7 +139,7 @@ public class Front{
         panel.add(modMuntjac);
 
         BufferedImage myPicture = ImageIO.read(Front.class.getResource("/muntjac.jpeg"));
-        Image newImage = myPicture.getScaledInstance(300, 300, Image.SCALE_DEFAULT);
+        Image newImage = myPicture.getScaledInstance(450, 450, Image.SCALE_DEFAULT);
         JLabel ta = new JLabel(new ImageIcon(newImage));
         frame.getContentPane().add(BorderLayout.SOUTH,panel);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
