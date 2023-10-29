@@ -107,7 +107,7 @@ public class Front{
         post.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Muntjac muntjac = showMuntjacDialog(post);
+                Muntjac muntjac = showMuntjacDialog(modMuntjac);
                 Request request = makeRequestPostMunt(URL,muntjac);
                 JSONObject object = getCircuitBreaker.ExecuteAction(request);
                 textArea.setText(object.toString());

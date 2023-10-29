@@ -24,7 +24,7 @@ public class CircuitBreaker
         }
 //        if (IsOpen())
 //        {
-//            // The circuit breaker is Open.
+////             The circuit breaker is Open.
 //
 //        }
 //
