@@ -1,0 +1,26 @@
+Muntjacs distríbuidos
+
+O projeto enviado contém ambos o front e backend da aplicação.
+A aplicação consiste de uma rest api, com cache-aside, e um front com circuit-break.
+
+Algumas modificações foram feitas ao padrão da cache-aside, ela consiste de um map e
+está a frente do banco de dados, o banco de dados é atualizado apenas quando algum
+objeto precisa sair da cache.
+
+O padrão circuit-break foi implementado por meio de uma máquina de estados, conforme
+a imagem disponível em https://learn.microsoft.com/en-us/azure/architecture/patterns/_images/circuit-breaker-diagram.png
+
+O projeto, para função de teste, possui apenas três espaços na cache, e requisitos de
+três requisições falhas para sair do estado closed para open, e três requisições
+concluidas com sucesso para ir de half-closed para closed.
+
+O front possui opções para criar um muntjac novo (post), modificar algum existente (put)
+e receber informações de algum existente (get).
+
+Para executar, primeiro criar o .jar do backend com:
+mvn clean package
+E o executar com:
+target/*.jar
+
+Os mesmos passos podem ser usados para executar o front, no entanto, é necessário mudar a
+mainClass no pom.xml para ufsc.br.distribuida.t1.front.Front

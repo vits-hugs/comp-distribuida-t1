@@ -13,7 +13,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 
 import static ufsc.br.distribuida.t1.front.requestFunctions.*;
 
@@ -97,9 +99,9 @@ public class Front{
                 }
                 if (id!=-1) {
                     Request request = makeRequestGetIDMunt(URL,id);
-                    object = getCircuitBreaker.ExecuteAction(request);
-                    textArea.setText(object.toString());
-
+                    makeRequest(request, getCircuitBreaker, textArea);
+//                    object = getCircuitBreaker.ExecuteAction(request);
+//                    textArea.setText(object.toString());
                 }
 
             }
@@ -109,8 +111,7 @@ public class Front{
             public void actionPerformed(ActionEvent e) {
                 Muntjac muntjac = showMuntjacDialog(modMuntjac);
                 Request request = makeRequestPostMunt(URL,muntjac);
-                JSONObject object = getCircuitBreaker.ExecuteAction(request);
-                textArea.setText(object.toString());
+                makeRequest(request, getCircuitBreaker, textArea);
             }
         });
 
@@ -128,8 +129,7 @@ public class Front{
                 if(id!=-1) {
                     Muntjac muntjac = showMuntjacDialog(modMuntjac);
                     Request request = makeRequestModifyMunt(URL, id, muntjac);
-                    JSONObject object = getCircuitBreaker.ExecuteAction(request);
-                    textArea.setText(object.toString());
+                    makeRequest(request, getCircuitBreaker, textArea);
                 }
             }
         });
@@ -145,5 +145,20 @@ public class Front{
         frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.getContentPane().add(BorderLayout.NORTH, textArea);
         frame.setVisible(true);
+    }
+
+    private static void makeRequest(Request request, CircuitBreaker getCircuitBreaker, JTextField textArea) {
+        try {
+            JSONObject object = getCircuitBreaker.ExecuteAction(request);
+            textArea.setText(object.toString());
+        } catch (Exception ex){
+            if (ex.getClass().equals(FileNotFoundException.class)){
+                textArea.setText("FileNotFoundException");
+            } else if (ex.getClass().equals(ConnectException.class)){
+                textArea.setText("connection");
+            } else {
+                textArea.setText("general");
+            }
+        }
     }
 }
