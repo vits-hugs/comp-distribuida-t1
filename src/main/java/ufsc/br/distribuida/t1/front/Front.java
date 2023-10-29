@@ -25,7 +25,7 @@ public class Front{
         //Creating the Frame
         JFrame frame = new JFrame("Muntjac");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        frame.setSize(600, 600);
 
         JTextField textArea = new JTextField("Read Only JTextField");
         textArea.setEditable(false);
@@ -35,14 +35,15 @@ public class Front{
         JButton post = new JButton("post muntjac");
         JButton getMuntjac = new JButton("get a muntjac");
         JButton modMuntjac = new JButton("modify muntjac");
+        JTextField inputID = new JTextField(10);
 
         CircuitBreaker getCircuitBreaker = new CircuitBreaker();
         getMuntjac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JSONObject object;
-
-                Request request = makeRequestGetIDMunt(URL,1);
+                int id = Integer.parseInt(inputID.getText());
+                Request request = makeRequestGetIDMunt(URL,id);
                 object = getCircuitBreaker.ExecuteAction(request);
 
                 textArea.setText(object.toString());
@@ -51,7 +52,7 @@ public class Front{
         post.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Muntjac muntjac = new Muntjac("pastel","asr",40);
+                Muntjac muntjac = new Muntjac("novo","chapeu novo",90);
                 Request request = makeRequestPostMunt(URL,muntjac);
                 JSONObject object = getCircuitBreaker.ExecuteAction(request);
                 textArea.setText(object.toString());
@@ -61,8 +62,9 @@ public class Front{
         modMuntjac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Muntjac muntjac = new Muntjac("novo","asr",45);
-                Request request = makeRequestModifyMunt(URL,153,muntjac);
+                Muntjac muntjac = new Muntjac("modificado","modificado chapeu",1);
+                int id = Integer.parseInt(inputID.getText());
+                Request request = makeRequestModifyMunt(URL,id,muntjac);
                 JSONObject object = getCircuitBreaker.ExecuteAction(request);
                 textArea.setText(object.toString());
             }
@@ -71,6 +73,7 @@ public class Front{
         panel.add(post);
         panel.add(getMuntjac);
         panel.add(modMuntjac);
+        panel.add(inputID);
 
         BufferedImage myPicture = ImageIO.read(Front.class.getResource("/muntjac.jpeg"));
         Image newImage = myPicture.getScaledInstance(300, 300, Image.SCALE_DEFAULT);
