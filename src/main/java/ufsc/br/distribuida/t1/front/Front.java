@@ -20,6 +20,52 @@ import static ufsc.br.distribuida.t1.front.requestFunctions.*;
 
 public class Front{
     final static String URL = "http://localhost:8080/api/muntjacs";
+
+    private static Muntjac showMuntjacDialog(JButton parent) {
+        JPanel panel = new JPanel();
+        JTextField nameField = new JTextField(20);
+        JTextField hatField = new JTextField(20);
+        JTextField happyField = new JTextField(20);
+
+        panel.add(new JLabel("Nome:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Chapéu:"));
+        panel.add(hatField);
+        panel.add(new JLabel("Felicidade:"));
+        panel.add(happyField);
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Insira dados do muntjac", JOptionPane.OK_CANCEL_OPTION);
+
+        String name = null;
+        String hat = null;
+        int happyness = 0;
+        if (result == JOptionPane.OK_OPTION) {
+            name = nameField.getText();
+            hat = hatField.getText();
+            happyness = Integer.parseInt(happyField.getText());
+//            JOptionPane.showMessageDialog(parent, "Name: " + name + "\nAge: " + age);
+        }
+
+        return new Muntjac(name, hat, happyness);
+    }
+
+    private static int choiceID(JButton parent) {
+        JPanel panel = new JPanel();
+        JTextField idField = new JTextField(20);
+
+        panel.add(new JLabel("ID:"));
+        panel.add(idField);
+
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Insira ID do muntjac", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+
+            int id = Integer.parseInt(idField.getText());
+            return id;
+
+        }
+        return -1;
+    }
+
     public static void main(String args[]) throws IOException {
 
         //Creating the Frame
@@ -35,24 +81,33 @@ public class Front{
         JButton post = new JButton("post muntjac");
         JButton getMuntjac = new JButton("get a muntjac");
         JButton modMuntjac = new JButton("modify muntjac");
-        JTextField inputID = new JTextField(10);
 
         CircuitBreaker getCircuitBreaker = new CircuitBreaker();
         getMuntjac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JSONObject object;
-                int id = Integer.parseInt(inputID.getText());
-                Request request = makeRequestGetIDMunt(URL,id);
-                object = getCircuitBreaker.ExecuteAction(request);
+                int id;
+                try {
+                    id = choiceID(getMuntjac);
+                } catch (NumberFormatException exception) {
+                    textArea.setText("Insira um numero");
+                    getMuntjac.doClick();
+                    return;
+                }
+                if (id!=-1) {
+                    Request request = makeRequestGetIDMunt(URL,id);
+                    object = getCircuitBreaker.ExecuteAction(request);
+                    textArea.setText(object.toString());
 
-                textArea.setText(object.toString());
+                }
+
             }
         });
         post.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Muntjac muntjac = new Muntjac("novo","chapeu novo",90);
+                Muntjac muntjac = showMuntjacDialog(modMuntjac);
                 Request request = makeRequestPostMunt(URL,muntjac);
                 JSONObject object = getCircuitBreaker.ExecuteAction(request);
                 textArea.setText(object.toString());
@@ -62,21 +117,29 @@ public class Front{
         modMuntjac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Muntjac muntjac = new Muntjac("modificado","modificado chapeu",1);
-                int id = Integer.parseInt(inputID.getText());
-                Request request = makeRequestModifyMunt(URL,id,muntjac);
-                JSONObject object = getCircuitBreaker.ExecuteAction(request);
-                textArea.setText(object.toString());
+                int id;
+                try {
+                    id = choiceID(getMuntjac);
+                } catch (NumberFormatException exception) {
+                    textArea.setText("Insira um numero");
+                    getMuntjac.doClick();
+                    return;
+                }
+                if(id!=-1) {
+                    Muntjac muntjac = showMuntjacDialog(modMuntjac);
+                    Request request = makeRequestModifyMunt(URL, id, muntjac);
+                    JSONObject object = getCircuitBreaker.ExecuteAction(request);
+                    textArea.setText(object.toString());
+                }
             }
         });
 
         panel.add(post);
         panel.add(getMuntjac);
         panel.add(modMuntjac);
-        panel.add(inputID);
 
         BufferedImage myPicture = ImageIO.read(Front.class.getResource("/muntjac.jpeg"));
-        Image newImage = myPicture.getScaledInstance(300, 300, Image.SCALE_DEFAULT);
+        Image newImage = myPicture.getScaledInstance(450, 450, Image.SCALE_DEFAULT);
         JLabel ta = new JLabel(new ImageIcon(newImage));
         frame.getContentPane().add(BorderLayout.SOUTH,panel);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
