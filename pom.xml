@@ -55,6 +55,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>ufsc.br.distribuida.t1.T1Application</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
